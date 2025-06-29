@@ -11,17 +11,22 @@ namespace LoginJWT.Services.AuthAPI.Service
         private readonly AppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-        public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthService(AppDbContext db,
+                           UserManager<ApplicationUser> userManager,
+                           RoleManager<IdentityRole> roleManager,
+                           IJwtTokenGenerator jwtTokenGenerator)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequest.UserName.ToLower());
+            ApplicationUser? user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequest.UserName.ToLower());
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
 
             if (user == null || !isValid)
@@ -29,7 +34,7 @@ namespace LoginJWT.Services.AuthAPI.Service
                 return new LoginResponseDTO() { User = null, Token = "" };
             }
 
-            // if user was found, Generate JWT
+            string token = _jwtTokenGenerator.GenerateToken(user);
 
             UserDTO userDTO = new UserDTO()
             {
@@ -42,7 +47,7 @@ namespace LoginJWT.Services.AuthAPI.Service
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
             {
                 User = userDTO,
-                Token = ""
+                Token = token
             };
 
             return loginResponseDTO;
