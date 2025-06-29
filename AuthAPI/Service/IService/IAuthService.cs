@@ -6,5 +6,6 @@ namespace LoginJWT.Services.AuthAPI.Service.IService
     {
         Task<string> Register(RegistrationRequestDTO newUserRequest);
         Task<LoginResponseDTO> Login(LoginRequestDTO loginRequest);
+        Task<bool> AssignRole(string email, string roleName);
     }
 }
