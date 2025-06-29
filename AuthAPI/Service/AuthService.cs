@@ -24,6 +24,26 @@ namespace LoginJWT.Services.AuthAPI.Service
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
+        public async Task<bool> AssignRole(string email, string roleName)
+        {
+            ApplicationUser? userFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+
+            if (userFromDb != null)
+            {
+                bool roleExist = await _roleManager.RoleExistsAsync(roleName);
+
+                if (!roleExist)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+
+                await _userManager.AddToRoleAsync(userFromDb, roleName);
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
         {
             ApplicationUser? user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequest.UserName.ToLower());

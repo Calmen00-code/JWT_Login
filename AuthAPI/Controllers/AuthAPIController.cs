@@ -49,7 +49,21 @@ namespace LoginJWT.Services.AuthAPI.Controllers
                 _response.Result = loginResponse;
                 return Ok(_response);
             }
+        }
 
+        [HttpPost("AssignRole")]
+        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDTO registerRequest)
+        {
+            bool success = await _authService.AssignRole(registerRequest.Email, registerRequest.Role.ToUpper());
+
+            if (!success)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Error encountered";
+                return BadRequest(_response);
+            }
+
+            return Ok(_response);
         }
     }
 }
