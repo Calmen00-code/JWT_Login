@@ -18,7 +18,7 @@ namespace LoginJWT.Services.AuthAPI.Controllers
             _response = new ResponseDTO();
         }
 
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDTO registerRequest)
         {
             var errorMessage = await _authService.Register(registerRequest);
@@ -33,10 +33,23 @@ namespace LoginJWT.Services.AuthAPI.Controllers
             return Ok(_response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Login()
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
         {
-            return Ok();
+            LoginResponseDTO loginResponse = await _authService.Login(loginRequest);
+
+            if (loginResponse.User == null)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Incorrect username or password!";
+                return BadRequest(_response);
+            }
+            else
+            {
+                _response.Result = loginResponse;
+                return Ok(_response);
+            }
+
         }
     }
 }

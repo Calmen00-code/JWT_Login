@@ -19,9 +19,33 @@ namespace LoginJWT.Services.AuthAPI.Service
             _roleManager = roleManager;
         }
 
-        public Task<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
+        public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
         {
-            throw new NotImplementedException();
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequest.UserName.ToLower());
+            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
+
+            if (user == null || !isValid)
+            {
+                return new LoginResponseDTO() { User = null, Token = "" };
+            }
+
+            // if user was found, Generate JWT
+
+            UserDTO userDTO = new UserDTO()
+            {
+                Email = user.Email,
+                ID = user.Id,
+                PhoneNumber = user.PhoneNumber,
+                Name = user.Name
+            };
+
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
+            {
+                User = userDTO,
+                Token = ""
+            };
+
+            return loginResponseDTO;
         }
 
         public async Task<string> Register(RegistrationRequestDTO newUserRequest)
