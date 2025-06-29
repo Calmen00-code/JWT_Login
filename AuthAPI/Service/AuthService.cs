@@ -19,12 +19,36 @@ namespace LoginJWT.Services.AuthAPI.Service
             _roleManager = roleManager;
         }
 
-        public Task<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
+        public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
         {
-            throw new NotImplementedException();
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequest.UserName.ToLower());
+            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
+
+            if (user == null || !isValid)
+            {
+                return new LoginResponseDTO() { User = null, Token = "" };
+            }
+
+            // if user was found, Generate JWT
+
+            UserDTO userDTO = new UserDTO()
+            {
+                Email = user.Email,
+                ID = user.Id,
+                PhoneNumber = user.PhoneNumber,
+                Name = user.Name
+            };
+
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
+            {
+                User = userDTO,
+                Token = ""
+            };
+
+            return loginResponseDTO;
         }
 
-        public async Task<UserDTO> Register(RegistrationRequestDTO newUserRequest)
+        public async Task<string> Register(RegistrationRequestDTO newUserRequest)
         {
             ApplicationUser newUser = new ApplicationUser()
             {
@@ -51,16 +75,19 @@ namespace LoginJWT.Services.AuthAPI.Service
                         PhoneNumber = userToReturn.PhoneNumber
                     };
 
-                    return retUserDTO;
+                    return "";
+                }
+                else
+                {
+                    return result.Errors.FirstOrDefault().Description;
                 }
             }
             catch (Exception ex)
             {
-
             }
 
             // something wrong if we get to here, return empty user dto
-            return new UserDTO();
+            return "";
         }
     }
 }
