@@ -24,9 +24,43 @@ namespace LoginJWT.Services.AuthAPI.Service
             throw new NotImplementedException();
         }
 
-        public Task<UserDTO> Register(RegistrationRequestDTO newUserRequest)
+        public async Task<UserDTO> Register(RegistrationRequestDTO newUserRequest)
         {
-            throw new NotImplementedException();
+            ApplicationUser newUser = new ApplicationUser()
+            {
+                UserName = newUserRequest.Email,
+                Email = newUserRequest.Email,
+                NormalizedEmail = newUserRequest.Email.ToUpper(),
+                Name = newUserRequest.Name,
+                PhoneNumber = newUserRequest.PhoneNumber
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(newUser, newUserRequest.Password);
+
+                if (result.Succeeded)
+                {
+                    var userToReturn = _db.ApplicationUsers.First(u => u.UserName == newUserRequest.Email);
+
+                    UserDTO retUserDTO = new UserDTO()
+                    {
+                        ID = userToReturn.Id,
+                        Email = userToReturn.Email,
+                        Name = userToReturn.Name,
+                        PhoneNumber = userToReturn.PhoneNumber
+                    };
+
+                    return retUserDTO;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            // something wrong if we get to here, return empty user dto
+            return new UserDTO();
         }
     }
 }
