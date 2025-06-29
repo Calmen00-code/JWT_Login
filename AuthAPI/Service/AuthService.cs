@@ -24,7 +24,7 @@ namespace LoginJWT.Services.AuthAPI.Service
             throw new NotImplementedException();
         }
 
-        public async Task<UserDTO> Register(RegistrationRequestDTO newUserRequest)
+        public async Task<string> Register(RegistrationRequestDTO newUserRequest)
         {
             ApplicationUser newUser = new ApplicationUser()
             {
@@ -51,16 +51,19 @@ namespace LoginJWT.Services.AuthAPI.Service
                         PhoneNumber = userToReturn.PhoneNumber
                     };
 
-                    return retUserDTO;
+                    return "";
+                }
+                else
+                {
+                    return result.Errors.FirstOrDefault().Description;
                 }
             }
             catch (Exception ex)
             {
-
             }
 
             // something wrong if we get to here, return empty user dto
-            return new UserDTO();
+            return "";
         }
     }
 }
