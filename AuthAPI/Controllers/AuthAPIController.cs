@@ -1,5 +1,6 @@
 ﻿using LoginJWT.Services.AuthAPI.DTO;
 using LoginJWT.Services.AuthAPI.Service.IService;
+using Mango.Web.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
