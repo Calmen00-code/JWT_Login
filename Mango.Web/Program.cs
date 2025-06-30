@@ -1,16 +1,22 @@
 using Mango.Web.Service;
 using Mango.Web.Service.IService;
+using Mango.Web.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure URL
+SD.AuthBaseAddress = builder.Configuration["ServiceUrls:AuthAPI"];
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 // Configuring http client
-builder.Services.AddHttpClient<IBaseService, BaseService>();
+builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<IAuthService, AuthService>();
 
 // Configuring services DI
 builder.Services.AddScoped<IBaseService, BaseService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 

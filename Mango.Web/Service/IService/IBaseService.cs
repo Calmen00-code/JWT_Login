@@ -1,5 +1,4 @@
-﻿using LoginJWT.Services.AuthAPI.DTO;
-using Mango.Web.Models.DTO;
+﻿using Mango.Web.Models.DTO;
 
 namespace Mango.Web.Service.IService
 {
