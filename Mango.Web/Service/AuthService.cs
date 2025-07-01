@@ -30,7 +30,7 @@ namespace Mango.Web.Service
         {
             RequestDTO requestDTO = new RequestDTO()
             {
-                ApiType = ApiType.GET,
+                ApiType = ApiType.POST,
                 Data = loginRequestDTO,
                 Url = SD.AuthBaseAddress + "/api/auth/Login"
             };

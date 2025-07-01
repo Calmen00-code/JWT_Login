@@ -90,17 +90,25 @@ namespace LoginJWT.Services.AuthAPI.Service
 
                 if (result.Succeeded)
                 {
-                    var userToReturn = _db.ApplicationUsers.First(u => u.UserName == newUserRequest.Email);
+                    ApplicationUser? userFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == newUserRequest.Email.ToLower());
 
-                    UserDTO retUserDTO = new UserDTO()
+                    if (userFromDb != null)
                     {
-                        ID = userToReturn.Id,
-                        Email = userToReturn.Email,
-                        Name = userToReturn.Name,
-                        PhoneNumber = userToReturn.PhoneNumber
-                    };
+                        bool roleExist = await _roleManager.RoleExistsAsync(newUserRequest.Role);
 
-                    return "";
+                        if (!roleExist)
+                        {
+                            await _roleManager.CreateAsync(new IdentityRole(newUserRequest.Role));
+                        }
+
+                        await _userManager.AddToRoleAsync(userFromDb, newUserRequest.Role);
+                        return "";
+                    }
+                    else
+                    {
+                        return "failed to assign role";
+                    }
+
                 }
                 else
                 {
@@ -112,7 +120,7 @@ namespace LoginJWT.Services.AuthAPI.Service
             }
 
             // something wrong if we get to here, return empty user dto
-            return "";
+            return "Something went wrong";
         }
     }
 }
