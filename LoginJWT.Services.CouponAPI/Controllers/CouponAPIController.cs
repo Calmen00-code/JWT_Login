@@ -31,7 +31,6 @@ namespace LoginJWT.Services.CouponAPI.Controllers
                 IEnumerable<Coupon> coupons = _db.Coupons.ToList();
                 IEnumerable<CouponDTO> couponDTOs = _mapper.Map<IEnumerable<CouponDTO>>(coupons);
                 _response.Result = couponDTOs;
-                return _response;
             }
             catch (Exception ex)
             {
@@ -49,13 +48,89 @@ namespace LoginJWT.Services.CouponAPI.Controllers
                 Coupon coupon = _db.Coupons.First(u => u.CouponId == id);
                 CouponDTO couponDTO = _mapper.Map<CouponDTO>(coupon);
                 _response.Result = couponDTO;
-                return _response;
             }
             catch (Exception ex)
             {
                 _response.isSuccess = false;
                 _response.Message = ex.Message;
             }
+            return _response;
+        }
+
+        [HttpGet("GetByCode/{code}")]
+        public ResponseDTO GetByCode(string code)
+        {
+            try
+            {
+                Coupon coupon = _db.Coupons.First(u => u.CouponCode.ToLower() == code);
+                CouponDTO couponDTO = _mapper.Map<CouponDTO>(coupon);
+                _response.Result = couponDTO;
+            }
+            catch (Exception ex)
+            {
+                _response.isSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [HttpPost]
+        public ResponseDTO Post([FromBody] CouponDTO couponDto)
+        {
+            try
+            {
+                Coupon coupon = _mapper.Map<Coupon>(couponDto);
+                _db.Coupons.Add(coupon);
+                _db.SaveChanges();
+
+                _response.Result = _mapper.Map<CouponDTO>(coupon);
+            }
+            catch (Exception ex)
+            {
+                _response.isSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+
+        [HttpPut]
+        public ResponseDTO Put([FromBody] CouponDTO couponDto)
+        {
+            try
+            {
+                Coupon coupon = _mapper.Map<Coupon>(couponDto);
+                _db.Coupons.Update(coupon);
+                _db.SaveChanges();
+
+                _response.Result = _mapper.Map<CouponDTO>(coupon);
+            }
+            catch (Exception ex)
+            {
+                _response.isSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [HttpDelete("{id:int}")]
+        public ResponseDTO Delete(int id)
+        {
+            try
+            {
+                Coupon coupon = _db.Coupons.FirstOrDefault(u => u.CouponId == id);
+                _db.Coupons.Remove(coupon);
+                _db.SaveChanges();
+
+                CouponDTO couponDTO = _mapper.Map<CouponDTO>(coupon);
+                _response.Result = couponDTO;
+            }
+            catch (Exception ex)
+            {
+                _response.isSuccess = false;
+                _response.Message = ex.Message;
+            }
+
             return _response;
         }
     }
