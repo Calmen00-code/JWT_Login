@@ -4,6 +4,7 @@
     {
         public const string RoleAdmin = "ROLE_ADMIN";
         public const string RoleCustomer = "ROLE_CUSTOMER";
+        public const string TokenCookie = "JWT_TOKEN";
 
         public enum ApiType
         {

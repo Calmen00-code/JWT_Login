@@ -1,6 +1,6 @@
 ﻿using LoginJWT.Services.AuthAPI.Models;
 
-namespace LoginJWT.Services.AuthAPI.Service
+namespace LoginJWT.Services.AuthAPI.Service.IService
 {
     public interface IJwtTokenGenerator
     {

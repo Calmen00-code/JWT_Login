@@ -1,4 +1,5 @@
 ﻿using LoginJWT.Services.AuthAPI.Models;
+using LoginJWT.Services.AuthAPI.Service.IService;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
