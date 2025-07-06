@@ -9,6 +9,7 @@ SD.AuthBaseAddress = builder.Configuration["ServiceUrls:AuthAPI"];
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 // Configuring http client
 builder.Services.AddHttpClient();
@@ -17,6 +18,7 @@ builder.Services.AddHttpClient<IAuthService, AuthService>();
 // Configuring services DI
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
 var app = builder.Build();
 
