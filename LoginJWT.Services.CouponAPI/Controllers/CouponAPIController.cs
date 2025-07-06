@@ -1,4 +1,5 @@
-﻿using LoginJWT.Services.CouponAPI.Data;
+﻿using AutoMapper;
+using LoginJWT.Services.CouponAPI.Data;
 using LoginJWT.Services.CouponAPI.Models;
 using LoginJWT.Services.CouponAPI.Models.DTO;
 using Microsoft.AspNetCore.Http;
@@ -13,11 +14,13 @@ namespace LoginJWT.Services.CouponAPI.Controllers
     {
         private readonly AppDbContext _db;
         private ResponseDTO _response;
+        private IMapper _mapper;
 
-        public CouponAPIController(AppDbContext db)
+        public CouponAPIController(AppDbContext db, IMapper mapper)
         {
             _db = db;
             _response = new ResponseDTO();
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -26,7 +29,8 @@ namespace LoginJWT.Services.CouponAPI.Controllers
             try
             {
                 IEnumerable<Coupon> coupons = _db.Coupons.ToList();
-                _response.Result = coupons;
+                IEnumerable<CouponDTO> couponDTOs = _mapper.Map<IEnumerable<CouponDTO>>(coupons);
+                _response.Result = couponDTOs;
                 return _response;
             }
             catch (Exception ex)
@@ -43,7 +47,8 @@ namespace LoginJWT.Services.CouponAPI.Controllers
             try
             {
                 Coupon coupon = _db.Coupons.First(u => u.CouponId == id);
-                _response.Result = coupon;
+                CouponDTO couponDTO = _mapper.Map<CouponDTO>(coupon);
+                _response.Result = couponDTO;
                 return _response;
             }
             catch (Exception ex)
