@@ -14,9 +14,15 @@ namespace Mango.Web.Service
             _baseService = baseService;
         }
 
-        public Task<ResponseDTO?> CreateCoupon(CouponDTO coupon)
+        public async Task<ResponseDTO?> CreateCoupon(CouponDTO coupon)
         {
-            throw new NotImplementedException();
+            RequestDTO request = new RequestDTO()
+            {
+                ApiType = ApiType.POST,
+                Url = SD.CouponBaseAddress + "/api/coupon",
+                Data = coupon
+            };
+            return await _baseService.SendAsync(request);
         }
 
         public Task<ResponseDTO?> GetCoupon(CouponDTO coupon)
