@@ -2,6 +2,7 @@
 using LoginJWT.Services.CouponAPI.Data;
 using LoginJWT.Services.CouponAPI.Models;
 using LoginJWT.Services.CouponAPI.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace LoginJWT.Services.CouponAPI.Controllers
 {
     [Route("api/coupon")]
     [ApiController]
+    [Authorize]
     public class CouponAPIController : ControllerBase
     {
         private readonly AppDbContext _db;
@@ -75,6 +77,7 @@ namespace LoginJWT.Services.CouponAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDTO Post([FromBody] CouponDTO couponDto)
         {
             try

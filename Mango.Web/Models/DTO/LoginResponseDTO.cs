@@ -1,4 +1,6 @@
-﻿namespace Mango.Web.Models.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Mango.Web.Models.DTO
 {
     public class LoginResponseDTO
     {

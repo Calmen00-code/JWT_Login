@@ -15,5 +15,6 @@
         }
 
         public static string AuthBaseAddress { get; set; }
+        public static string CouponBaseAddress { get; set; }
     }
 }

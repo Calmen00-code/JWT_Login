@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure URL
 SD.AuthBaseAddress = builder.Configuration["ServiceUrls:AuthAPI"];
+SD.CouponBaseAddress = builder.Configuration["ServiceUrls:CouponAPI"];
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -19,6 +20,7 @@ builder.Services.AddHttpClient<IAuthService, AuthService>();
 // Configuring services DI
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
