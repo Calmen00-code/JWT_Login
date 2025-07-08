@@ -77,6 +77,7 @@ namespace LoginJWT.Services.CouponAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDTO Post([FromBody] CouponDTO couponDto)
         {
             try
