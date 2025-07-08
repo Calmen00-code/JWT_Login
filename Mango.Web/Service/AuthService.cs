@@ -23,7 +23,7 @@ namespace Mango.Web.Service
                 Url = SD.AuthBaseAddress + "/api/auth/AssignRole"
             };
 
-            return await _baseService.SendAsync(requestDTO);
+            return await _baseService.SendAsync(requestDTO, withBearer: false);
         }
 
         public async Task<ResponseDTO?> LoginAsync(LoginRequestDTO loginRequestDTO)
@@ -47,7 +47,7 @@ namespace Mango.Web.Service
                 Url = SD.AuthBaseAddress + "/api/auth/Register"
             };
 
-            return await _baseService.SendAsync(requestDTO);
+            return await _baseService.SendAsync(requestDTO, withBearer: false);
         }
     }
 }
